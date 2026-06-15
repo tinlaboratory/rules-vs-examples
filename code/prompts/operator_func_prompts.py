@@ -53,18 +53,6 @@ def build_problem_string(difficulty: int, inputs: list) -> str:
     return problem
 
 def get_rule_based_prompt(difficulty, problem):
-    prompt = HEADER
-    prompt += "RULES:\n"
-    if difficulty == 1:
-        prompt += "".join(OP_FUNC_RULE_BASE)
-    elif difficulty == 2:
-        prompt += "".join(OP_FUNC_RULE_LV2)
-    elif difficulty == 3:
-        prompt += "".join(OP_FUNC_RULE_LV3)
-    prompt += f"Problem: \({build_problem_string(difficulty, problem)}\)\n"
-    prompt += "Answer (place the result in \\boxed{YOUR_ANSWER}):"
-
-    return prompt
     return render_markdown_prompt(
         "operator_function.md",
         ("Rules", f"Difficulty {difficulty}"),
