@@ -2,29 +2,32 @@
 from prompts.markdown_loader import render_markdown_prompt
 
 
-OP_FUNC_BASE = [
-    "1. Operator function is composed of two operators, and inputs are integer.",
-    "2. For the operator function @(x,y,z), x, y, z are the inputs of the function.",
-    "3. First, multiply y to the x.",
-    "4. Then, add z to the result from the previous operation."
+HEADER = "You will be shown a problem that uses a newly defined operator function based on the following rules and need to calculate the answer for the problem.\n\n"
+
+
+OP_FUNC_RULE_BASE = [
+    "1. The new operator function f is composed of two arithmetic operators, and its inputs are integers.\n",
+    "2. Let x, y, z be inputs of the function.\n",
+    "3. To compute f(x,y,z), first multiply x and y.\n",
+    "4. Then, add z to the result from the previous operation.\n"
 ]
 
-OP_FUNC_LV2 = [
-    "1. Operator function is composed of three operators, and inputs are integer. ",
-    "2. For the operator function #(x,y,z,a), x,y,z,a are the inputs of the function.",
-    "3. First, subtract y from x.",
-    "4. Second, multiply the result from the previous operation by z.",
-    "5. Last, adds a to the result of the previous operation."
+OP_FUNC_RULE_LV2 = [
+    "1. The new operator function g is composed of three arithmetic operators, and its inputs are integers.\n",
+    "2. Let x, y, z, a be inputs of the function.\n",
+    "3. To compute g(x,y,z,a), first subtract y from x.\n",
+    "4. Second, multiply the result from the previous operation by z.\n",
+    "5. Last, adds a to the result of the previous operation.\n"
 
 ]
 
-OP_FUNC_LV3 = [
-    "1. Operator function is composed of four operators, and inputs are integer.",
-    "2. For the operator function $(x,y,z,a,b), x,y,z,a,b are the inputs of the function.",
-    "3. First, adds y to x.",
-    "4. Second, multiply the result from the previous operation by z.",
-    "5. Third, subtract a from the result of the previous operation.",
-    "6. Last, divide the result by b."
+OP_FUNC_RULE_LV3 = [
+    "1. The new operator function h is composed of four arithmetic operators, and its inputs are integers.\n",
+    "2. Let x, y, z, a, b be inputs of the function.\n",
+    "3. To compute h(x,y,z,a,b), first add x and y.\n",
+    "4. Second, multiply the result from the previous operation by z.\n",
+    "5. Third, subtract a from the result of the previous operation.\n",
+    "6. Last, take the remainder when the result is divided by b.\n"
 ]
 
 def op_func(input, difficulty):
@@ -36,20 +39,32 @@ def op_func(input, difficulty):
         output = f"({x},{y},{z},{a}) → ({x-y},{z},{a}) → ({(x-y)*z},{a}) → {((x-y)*z)+a}"
     else:
         x, y, z, a, b = input
-        output = f"({x},{y},{z},{a},{b}) → ({x+y},{z},{a},{b}) → ({(x+y)*z},{a},{b}) → ({(x+y)*z-a},{b}) → {((x+y)*z-a)/b}"
+        output = f"({x},{y},{z},{a},{b}) → ({x+y},{z},{a},{b}) → ({(x+y)*z},{a},{b}) → ({(x+y)*z-a},{b}) → {((x+y)*z-a)%b}"
     return output
 
 def build_problem_string(difficulty: int, inputs: list) -> str:
     """Build the problem operator string for display."""
     if difficulty == 1:
-        problem = "@("+ ",".join(map(str, inputs)) + ")"
+        problem = "f("+ ",".join(map(str, inputs)) + ")"
     elif difficulty == 2:
-        problem = "#("+ ",".join(map(str, inputs)) + ")"
+        problem = "g("+ ",".join(map(str, inputs)) + ")"
     else:
-        problem = "$("+ ",".join(map(str, inputs)) + ")"
+        problem = "h("+ ",".join(map(str, inputs)) + ")"
     return problem
 
 def get_rule_based_prompt(difficulty, problem):
+    prompt = HEADER
+    prompt += "RULES:\n"
+    if difficulty == 1:
+        prompt += "".join(OP_FUNC_RULE_BASE)
+    elif difficulty == 2:
+        prompt += "".join(OP_FUNC_RULE_LV2)
+    elif difficulty == 3:
+        prompt += "".join(OP_FUNC_RULE_LV3)
+    prompt += f"Problem: \({build_problem_string(difficulty, problem)}\)\n"
+    prompt += "Answer (place the result in \\boxed{YOUR_ANSWER}):"
+
+    return prompt
     return render_markdown_prompt(
         "operator_function.md",
         ("Rules", f"Difficulty {difficulty}"),
@@ -70,24 +85,23 @@ def get_example_based_prompt(difficulty, problem, examples):
         all_examples = examples["input_all"]
 
     for inp, ans in all_examples:
-        #prompt += f"\({build_problem_string(difficulty, inp)}\)=\(\\boxed{{{ans}}}\)\n"
         prompt += f"\({build_problem_string(difficulty, inp)}\)={op_func(inp, difficulty)}=\(\\boxed{{{ans}}}\)\n"
 
-    prompt += f"\({build_problem_string(difficulty, problem)}\)=\n"
-    prompt += "Answer (place the result in \\boxed{}):"
+    prompt += f"\({build_problem_string(difficulty, problem)}\)="
     return prompt
 
 
 def get_combined_prompt(difficulty, problem, examples):
-    prompt = "You will be shown a problem using operator function and need to find the answer for the problem.\n\n"
+    prompt = HEADER
     prompt += "RULES:\n"
     if difficulty == 1:
-        prompt += "".join(OP_FUNC_BASE)
+        prompt += "".join(OP_FUNC_RULE_BASE)
     elif difficulty == 2:
-        prompt += "".join(OP_FUNC_LV2)
+        prompt += "".join(OP_FUNC_RULE_LV2)
     elif difficulty == 3:
-        prompt += "".join(OP_FUNC_LV3)
+        prompt += "".join(OP_FUNC_RULE_LV3)
 
+    prompt += "\nFor example,\n"
     if isinstance(examples, list):
         # Flatten all input_all entries across all example dicts
         all_examples = []
@@ -100,7 +114,7 @@ def get_combined_prompt(difficulty, problem, examples):
         all_examples = examples["input_all"]
         
     for inp, ans in all_examples:
-        prompt += f"\({build_problem_string(difficulty, inp)}\) = \(\\boxed{{{ans}}}\)\n"
+        prompt += f"\({build_problem_string(difficulty, inp)}\)={op_func(inp, difficulty)}=\(\\boxed{{{ans}}}\)\n"
 
     prompt += f"Problem: \({build_problem_string(difficulty, problem)}\)\n"
     prompt += "Answer (place the result in \\boxed{}):\\boxed{}"

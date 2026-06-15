@@ -1,6 +1,7 @@
 
 from prompts.markdown_loader import render_markdown_prompt
 
+HEADER = "You will be shown 9 cards on the board and have to select 3 cards that form a GAME-SET based on the following rules.\n"
 
 SET_GAME_RULES_BASE = [
     "1. Each card has two attributes: an animal and a biome.\n",
@@ -27,13 +28,7 @@ SET_GAME_RULES_LV3 = [
     "7. But only for the number, 2 of the cards should have the same number, and 1 of them should have a different number in order for the set to be valid.\n"
 ]
 
-SELECTION = [
-    "You will be shown 9 cards on the board and have to select 3 cards that form a GAME-SET based on the rules.\n\n",
-    "Here is the board:\n\n",
-    "Now remember the rules and tell me which three cards here constitute a GAME-SET.\nYou must pick exactly one valid set by typing the cards in the following format:\n \\boxed{First card: CARD1\nSecond card: CARD2\nThird card: CARD3}\n"
-]
-
-OUTPUT_ENFORCEMENT = []
+FORMAT = "Based on the rules, tell me which three cards here constitute a GAME-SET. Type the cards in the following format: \\boxed{First card: CARD1\nSecond card: CARD2\nThird card: CARD3}"
 
 #FORMATTING
 def format_card(card, difficulty):
@@ -90,8 +85,7 @@ def get_example_based_prompt(difficulty, test_input, examples):
         prompt += format_card(c3, difficulty)
         prompt += "}; "
 
-    prompt += format_board(board, difficulty) + "→"
-    prompt += "\nYou must pick exactly one valid set and answer in \\boxed{} format."
+    prompt += format_board(board, difficulty) +"→"
     return prompt
 
 def get_combined_prompt(difficulty, test_input, examples):
@@ -102,7 +96,7 @@ def get_combined_prompt(difficulty, test_input, examples):
     """
 
     board = test_input
-    prompt = SELECTION[0]
+    prompt = HEADER +"\n"
     if difficulty == 1:
             prompt += "RULES:\n" + "".join(SET_GAME_RULES_BASE)
     elif difficulty == 2:
@@ -114,18 +108,16 @@ def get_combined_prompt(difficulty, test_input, examples):
     for i in range(len(examples)):
         example_cards = examples[i]["valid_set"]
         example_board = examples[i]["board"]
-        prompt += format_board(example_board, difficulty) +"→"
 
+        prompt += format_board(example_board, difficulty) +"→"
         c1, c2, c3 = example_cards
         prompt += "\\boxed{" +format_card(c1, difficulty)
         prompt += format_card(c2, difficulty)
         prompt += format_card(c3, difficulty)
         prompt += "}; "
         
-    prompt += "\n" + SELECTION[1]
+    prompt += "\n" + "Here is the board:\n\n"
     prompt += format_board(board, difficulty) + "\n\n"
-    prompt += SELECTION[2]
-    #prompt += "/no_think"
-
+    prompt += FORMAT
 
     return prompt
