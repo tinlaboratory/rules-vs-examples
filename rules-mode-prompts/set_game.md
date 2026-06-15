@@ -15,8 +15,7 @@ Here is the board:
 
 {board}
 
-Now remember the rules and tell me which three cards here constitute a GAME-SET.
-You must pick exactly one valid set by typing the cards in the following format:
+Based on the rules, tell me which three cards here constitute a GAME-SET. There may be multiple valid sets, but you must pick exactly one valid set and output the cards in the following format:
  \boxed{{First card: CARD1
 Second card: CARD2
 Third card: CARD3}}
@@ -35,8 +34,7 @@ Here is the board:
 
 {board}
 
-Now remember the rules and tell me which three cards here constitute a GAME-SET.
-You must pick exactly one valid set by typing the cards in the following format:
+Based on the rules, tell me which three cards here constitute a GAME-SET. There may be multiple valid sets, but you must pick exactly one valid set and output the cards in the following format:
  \boxed{{First card: CARD1
 Second card: CARD2
 Third card: CARD3}}
@@ -57,8 +55,7 @@ Here is the board:
 
 {board}
 
-Now remember the rules and tell me which three cards here constitute a GAME-SET.
-You must pick exactly one valid set by typing the cards in the following format:
+Based on the rules, tell me which three cards here constitute a GAME-SET. There may be multiple valid sets, but you must pick exactly one valid set and output the cards in the following format:
  \boxed{{First card: CARD1
 Second card: CARD2
 Third card: CARD3}}
