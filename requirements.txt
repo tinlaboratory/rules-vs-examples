@@ -1,0 +1,6 @@
+vllm>=0.5
+numpy>=1.24
+tqdm>=4.66
+openai>=1.0
+scipy>=1.10
+matplotlib>=3.7
