@@ -20,9 +20,9 @@ def operator_func_lv2(input):
     return output
 
 def operator_func_lv3(input):
-    """ plus -> mul -> minus -> div """
+    """ plus -> mul -> minus -> mod """
     x,y,z,a,b = input
-    output = (((x+y)*z)-a)/b
+    output = (((x+y)*z)-a)%b
     return output
 
 
