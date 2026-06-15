@@ -3,7 +3,7 @@
 ## Rules
 
 ### Difficulty 1
-You will be shown 9 cards on the board and have to select 3 cards that form a GAME-SET based on the rules.
+You will be shown 9 cards on the board and have to select 3 cards that form a GAME-SET based on the following rules.
 
 RULES:
 1. Each card has two attributes: an animal and a biome.
@@ -22,7 +22,7 @@ Second card: CARD2
 Third card: CARD3}}
 
 ### Difficulty 2
-You will be shown 9 cards on the board and have to select 3 cards that form a GAME-SET based on the rules.
+You will be shown 9 cards on the board and have to select 3 cards that form a GAME-SET based on the following rules.
 
 RULES:
 1. Each card has three attributes: an animal, a biome, and a food.
@@ -42,7 +42,7 @@ Second card: CARD2
 Third card: CARD3}}
 
 ### Difficulty 3
-You will be shown 9 cards on the board and have to select 3 cards that form a GAME-SET based on the rules.
+You will be shown 9 cards on the board and have to select 3 cards that form a GAME-SET based on the following rules.
 
 RULES:
 1. Each card has a number and three attributes: an animal, a biome, and a food.
